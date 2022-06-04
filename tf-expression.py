@@ -1,3 +1,4 @@
+import sys
 import pandas as pd
 import numpy as np
 from functools import reduce
@@ -16,19 +17,24 @@ parser.add_argument('-g', dest='gFile', type=str,
                    help='Normalized gene expression values')
 parser.add_argument('-p', dest='pFile', type=str,
                    help='Result from Predixcan')
+parser.add_argument('-c', dest='covFile', type=str,
+                   help='Tissue covariance file')
 parser.add_argument('-o', dest='oFile', type=str,
                    help='Output file')
 
-if len(sys.argv) != 3:
+#print (sys.argv)
+if len(sys.argv) <9:
     parser.print_help()
     sys.exit()
 
 args = parser.parse_args()
 
-gene_expression_path = ReadParams(args.gFile)
+gene_expression_path = args.gFile
 
 # remove covariants
-cov = pd.read_table(f'{tissue}.v8.covariates.txt', index_col=0)
+
+cov = pd.read_table(args.covFile, index_col=0)
+#cov = pd.read_table(f'{args.tissue}.v8.covariates.txt', index_col=0)
 covariates = cov.iloc[list(range(3))+list(range(5, 20))+[-2, -1],:]
 
 
@@ -55,7 +61,7 @@ for i, chunk in enumerate(expression):
 removed = pd.concat(l).reset_index()
 
 # Cov-removed gene expression and the result of predixcan
-prediction_path = ReadParams(args.pFile)
+prediction_path = args.pFile
 prediction = pd.read_table(prediction_path)
 cols =[x.split('.')[0] for x in list(prediction.columns)]
 prediction.columns = cols
@@ -70,7 +76,7 @@ predixcan2 = predixcan1[predixcan1.index.isin(common_gene)]
 predixcan2 = predixcan2.loc[removed2.index, :]
 
 # Calculate the R2 scores of predixcan genes
-# Select genes with R2 scores equal to or large than 0.1
+# Select genes with R2 scores equal to or large than 0
 r2_scores = {}
 for i, row in removed2.iterrows():
     y = row.values.reshape(-1, 1)
@@ -82,7 +88,7 @@ for i, row in removed2.iterrows():
     r2_scores[i] = r2
 r2_score_csv = pd.DataFrame(r2_scores.items(), columns=['gene', 'r2_score'])
 r2_scores = dict(zip(r2_score_csv['gene'], r2_score_csv['r2_score']))
-genes = list(dict(filter(lambda x: x[1] >=0.1, r2_scores.items())).keys())
+genes = list(dict(filter(lambda x: x[1] >=0, r2_scores.items())).keys())
 
 normalized = removed2
 predixcan = predixcan2
@@ -221,7 +227,7 @@ for i in list(genes_after_shuffle_tf.keys()):
     weights_dict = dict(zip(tfs, weights))
     tf_weights[ENSG_to_gene_name[i]] = weights_dict 
 for k, v in tf_weights.items():
-    with open(ReadParams(args.oFile), 'a+') as f:
+    with open(args.oFile, 'a+') as f:
         f.write(f'=====Gene: {k}=====')
         f.write('TF and Weights: ')
         f.write(v)
@@ -277,6 +283,6 @@ for i in range(5):
     significant_genes = [ENSG_to_gene_name[x] for x in list(genes_after_shuffle_tf)]
     random90hitgenes.append(significant_genes)
 
-with open(ReadParams(args.oFile), 'a+') as f:
+with open(args.oFile, 'a+') as f:
     f.write("Robustness check")
     f.write(random90hitgenes)
