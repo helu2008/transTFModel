@@ -9,7 +9,7 @@ To run this script, you will need:
 `python Predict.py --model_db_path /GTEx_v8/eqtl/mashr/mashr_tissue.db --vcf_genotypes GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_866Indiv.vcf --vcf_mode genotyped --pred_output predixcan_output.txt --pred_summary_output predixcan_summary_output.txt --verbosity 9 --throw --model_db_snp_key varID --on_the_fly_mapping METADATA "{}_{}_{}_{}_b38"`
 
 Example of running tf-expression.py on tissue of Muscle Skeletal: \
-`python tf-expression.py -g Muscle_Skeletal.v8.normalized_expression.bed -p predixcan_output_Muscle_Skeletal.txt -c Muscle_Skeletal.v8.covariates.txt-o tf-expression_output.txt` \
+`python tf-expression.py -g Muscle_Skeletal.v8.normalized_expression.bed -p predixcan_output_Muscle_Skeletal.txt -c Muscle_Skeletal.v8.covariates.txt -o tf-expression_output.txt` \
 The result of hit genes, their TFs as well as the weights will be saved in the output file.
 
 ## tf-binding.py
