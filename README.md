@@ -30,6 +30,6 @@ The result are two files, a vcf of GTEx genotype, including only deleterious SNP
 
 The next step is to run tf-binding.py using the preprocessed files:
 Example of running tf-binding.py on tissue of Muscle Skeletal: \
-`python tf-binding.py -e Muscle_Skeletal.v8.normalized_expression.bed -p predixcan_output_Muscle_Skeletal.txt -t Tf2Pos.txt -g filtered_snpsift.vcf -c Muscle_Skeletal.v8.covariates.txt -o tf-binding_output.txt` \
+`python tf-binding.py -e Muscle_Skeletal.v8.normalized_expression.bed -p predixcan_output_Muscle_Skeletal.txt -t Tf2Pos.txt -g filtered_snpsift.vcf -c Muscle_Skeletal.v8.covariates.txt -o tf-binding_output.txt` 
 
 where -e is for the tissue-specific bed file from GTEx (expression), -p is the PrediXcan imputed expression for that tissue, -c is for the covariates file for the same tissue, -t and -g are the outputs of the preprocessing step and -o is the name of the output file. The result of hit genes, the nsSNPs of their TFs as well as the weights will be saved in the output file. The last section of the output file is the result of the robustness check, which should be used to select the hit genes that remain robust after sub-sampling. 
