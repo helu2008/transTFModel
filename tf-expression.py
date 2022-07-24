@@ -324,7 +324,7 @@ random90hitgenes = []
 # expression = expression.set_index('gene_id')
 # expression = expression[diff.columns]
 for i in range(NUM_ROBUST_ITER):
-    print ("Robustness check #" + i)
+    print ("Robustness check #" + str(i))
     diff = normalized - predixcan
     all_samples = diff.columns
     sample_length = len(all_samples)
